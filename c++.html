@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C++ Roadmap — Bilal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Archivo+Black&display=swap">
+<style>
+:root{
+  --bg:#d4d4cf; --ink:#000; --panel:#fff; --muted:#4a4a47;
+  --purple:#6d28ff; --onpurple:#fff; --active:#ffe94d; --bar:#6d28ff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0c0c;--ink:#f2f2ee;--panel:#161616;--muted:#a3a39e;--purple:#8b5cff;--onpurple:#000;--active:#3a3300;--bar:#8b5cff}}
+:root[data-theme="dark"]{--bg:#0c0c0c;--ink:#f2f2ee;--panel:#161616;--muted:#a3a39e;--purple:#8b5cff;--onpurple:#000;--active:#3a3300;--bar:#8b5cff}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Archivo",Arial,sans-serif;font-size:16px;line-height:1.5}
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:4px solid var(--ink);padding:10px 16px}
+.progress .row{max-width:1040px;margin:0 auto;display:flex;gap:16px;align-items:center}
+.track{flex:1;height:22px;border:4px solid var(--ink);background:var(--panel)}
+.fill{height:100%;width:0;background:var(--bar);transition:width .25s}
+.pct{font-family:"Archivo Black","Arial Black",sans-serif;min-width:5.5ch;text-align:right}
+main{max-width:1040px;margin:0 auto;padding:24px 16px 64px}
+header{border:4px solid var(--ink);background:var(--panel);padding:20px;box-shadow:10px 10px 0 var(--ink);margin-bottom:40px}
+h1{font-family:"Archivo Black","Arial Black",Impact,sans-serif;font-weight:400;font-size:clamp(2.6rem,10vw,6rem);line-height:.92;margin:0 0 12px;letter-spacing:-.02em}
+header p{margin:0;max-width:60ch;color:var(--muted)}
+.tools{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.9rem;color:var(--muted)}
+button{font:inherit;font-weight:600;color:var(--ink);background:var(--panel);border:3px solid var(--ink);padding:6px 12px;cursor:pointer}
+button:hover{background:var(--active)}
+.topic{border:4px solid var(--ink);background:var(--panel);margin-bottom:20px}
+.topic.active{background:var(--active);box-shadow:10px 10px 0 var(--ink)}
+.head{all:unset;box-sizing:border-box;display:flex;gap:16px;align-items:baseline;width:100%;padding:16px;cursor:pointer;background:var(--purple);color:var(--onpurple);border-bottom:4px solid var(--ink)}
+.head:focus-visible{outline:4px solid var(--ink);outline-offset:-8px}
+.head .n{font-family:"Archivo Black","Arial Black",sans-serif;font-size:3rem;line-height:1}
+.head h2{font-family:"Archivo Black","Arial Black",sans-serif;font-weight:400;font-size:clamp(1.3rem,4vw,1.9rem);margin:0;line-height:1.1;flex:1}
+.head .cnt{font-weight:600;white-space:nowrap}
+ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+li{border-right:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+label{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;cursor:pointer;height:100%}
+input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:none;width:20px;height:20px;margin:3px 0 0;border:3px solid var(--ink);background:var(--panel);cursor:pointer;display:grid;place-content:center}
+input[type=checkbox]:checked{background:var(--purple)}
+input[type=checkbox]:checked::after{content:"";width:6px;height:11px;border:solid var(--onpurple);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+input[type=checkbox]:focus-visible{outline:4px solid var(--purple);outline-offset:2px}
+input:checked + span{text-decoration:line-through;text-decoration-thickness:2px;color:var(--muted)}
+footer{border:4px solid var(--ink);background:var(--ink);color:var(--bg);padding:16px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="progress"><div class="row"><div class="track"><div class="fill" id="fill"></div></div><div class="pct" id="pct">0%</div></div></div>
+<main>
+<header>
+  <h1>C++<br>Roadmap</h1>
+  <p>12 topics from "how a program runs" to templates. Tick a sub-topic when you finish it. Click a topic heading to mark it as the one you are on.</p>
+  <div class="tools"><span id="count"></span><button id="reset" type="button">Reset progress</button></div>
+</header>
+<div id="topics"></div>
+<footer>Each topic ends with a hands-on assignment and a "how to explain this to my class" line.</footer>
+</main>
+<script>
+const DATA=[
+["How a program runs",["CPU and what it understands","Compiler vs interpreter","V8 and JIT","Assembly language","Preprocessing","Compiling","Linking","main() and the entry point"]],
+["Variables and data types",["Declaring variables","int, double, char, bool","Sizes and ranges","const","Type conversion and casting","Static typing vs JS dynamic typing"]],
+["Operators, input/output",["Arithmetic and assignment","Comparison and logical","Increment, precedence","Bitwise basics","cout and cin","Formatting output"]],
+["Conditions and loops",["if / else","switch","Ternary operator","for loop","while and do-while","break, continue, nesting"]],
+["Functions",["Declaration vs definition","Parameters, pass by value","Return values","Overloading","Default arguments","Scope","Recursion and the call stack"]],
+["Arrays, strings, vectors",["Arrays","Multi-dimensional arrays","C-strings","std::string","std::vector","Range-based for"]],
+["Pointers and references",["Addresses","Pointers and dereferencing","Pointer arithmetic","References","Pass by reference / pointer","const and nullptr"]],
+["Memory: stack vs heap",["The stack","The heap","new and delete","Leaks and dangling pointers","Dynamic arrays","Smart pointers (intro)"]],
+["Structs and classes",["Structs","Classes","public / private","Member functions and this","Encapsulation","static members"]],
+["Constructors to polymorphism",["Constructors","Destructors","Copy constructor","Inheritance","virtual and polymorphism","Abstract classes"]],
+["STL",["Containers: vector, map, set","Iterators","Algorithms (sort, find)","Lambdas"]],
+["Files, exceptions, templates",["File streams","Reading and writing files","try / catch / throw","Function templates","Class templates"]]
+];
+const KEY="cpp-roadmap-v1";
+let state={done:{},active:0};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.done)state={done:s.done,active:+s.active||0}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+const root=document.getElementById("topics");
+const total=DATA.reduce((a,t)=>a+t[1].length,0);
+DATA.forEach((t,i)=>{
+  const sec=document.createElement("section");sec.className="topic";sec.dataset.i=i;
+  const head=document.createElement("button");head.type="button";head.className="head";
+  head.innerHTML='<span class="n">'+(i+1)+'</span><h2></h2><span class="cnt"></span>';
+  head.querySelector("h2").textContent=t[0];
+  head.addEventListener("click",()=>{state.active=i;save();render()});
+  const ul=document.createElement("ul");
+  t[1].forEach((s,j)=>{
+    const id=i+"-"+j,li=document.createElement("li"),lb=document.createElement("label"),cb=document.createElement("input"),sp=document.createElement("span");
+    cb.type="checkbox";cb.dataset.id=id;sp.textContent=s;
+    cb.addEventListener("change",()=>{if(cb.checked)state.done[id]=true;else delete state.done[id];save();render()});
+    lb.append(cb,sp);li.append(lb);ul.append(li);
+  });
+  sec.append(head,ul);root.append(sec);
+});
+function render(){
+  let n=0;
+  document.querySelectorAll(".topic").forEach(sec=>{
+    const i=+sec.dataset.i;let c=0;
+    sec.classList.toggle("active",i===state.active);
+    sec.querySelectorAll("input").forEach(cb=>{const on=!!state.done[cb.dataset.id];cb.checked=on;if(on)c++});
+    n+=c;sec.querySelector(".cnt").textContent=c+"/"+DATA[i][1].length;
+  });
+  const p=Math.round(n/total*100);
+  document.getElementById("fill").style.width=p+"%";
+  document.getElementById("pct").textContent=p+"%";
+  document.getElementById("count").textContent=n+" of "+total+" sub-topics done";
+}
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Clear all progress?")){state={done:{},active:0};save();render()}});
+render();
+</script>
+</body>
+</html>
